@@ -1,0 +1,110 @@
+---
+title: "Intelligence Artificielle"
+# Sous-titre par défaut : course.class · course.year (_quarto.yml) ;
+# auteur : author (_quarto.yml)
+---
+
+<!--
+Structure : chaque titre « ## » est une section (listée dans la table des
+matières à droite). Dans une section, un bloc « ::: documents » transforme une
+liste de liens en cartes : icône selon le type (PDF, notebook, Python...),
+taille du fichier et description (texte après le lien).
+
+- {.solution} après le lien ajoute le badge « corrigé » ;
+- {.hidden} masque la puce : ni affichée, ni publiée (voir la fin de la page
+  pour masquer une section entière) ;
+- un fichier absent est affiché « bientôt disponible » (avertissement au rendu) ;
+- les .ipynb et .py sont téléchargés, les PDF et liens s'ouvrent dans un onglet.
+-->
+
+Bienvenue sur la page du cours. Vous y trouverez les supports de cours, les
+séries d'exercices et les travaux pratiques, mis à jour au fil du semestre.
+
+<!-- Encadré : callout-note, callout-tip, callout-important, callout-warning -->
+
+::: callout-note
+Les présences se renseignent toujours sur **Cyberlearn**, à chaque début de cours.
+:::
+
+## Informations générales
+
+<!-- Liste de définitions (« Terme », puis « : définition ») : deux colonnes -->
+
+Syllabus
+: [IA I (ISC3-il)](#) · [MOIA (ISC3-id)](#)
+
+Forme
+: théorie et exercices, 3 périodes par semaine (ISC3-il) ou 4 périodes par semaine (ISC3-id)
+
+Référence
+: S. Russell, P. Norvig, *Artificial Intelligence: A Modern Approach*
+
+### Évaluation
+
+<!-- Cartes côte à côte (empilées sur mobile) : grille Bootstrap de Quarto -->
+
+:::: {.grid}
+::: {.g-col-12 .g-col-md-6 .hearc-card}
+[IA I (ISC3-il)]{.hearc-card-title}
+
+1 projet et des questionnaires (au maximum un par chapitre), en tout début de
+la leçon du chapitre suivant. Aucun matériel autorisé ; une absence vaut 1.
+:::
+
+::: {.g-col-12 .g-col-md-6 .hearc-card}
+[MOIA (ISC3-id)]{.hearc-card-title}
+
+1 projet et 1 examen oral.
+:::
+::::
+
+### Règles
+
+- Les corrigés ne sont pas distribués systématiquement : prenez des notes pendant la correction.
+- En cas d'absence, c'est à vous de rattraper.
+- **IA générative** : interdite pour les éléments notés (questionnaires, projet),
+  autorisée dans une certaine limite pour le reste. Vous devez maîtriser votre
+  code et référencer celui qui n'est pas le vôtre.
+
+## Chap. 1 — Introduction
+
+Historique, familles de l'IA et organisation du cours.
+
+::: documents
+- [Slides — Introduction](documents/01-introduction/01-introduction-slides.pdf) Définitions, grandes familles de l'IA, enjeux éthiques.
+- [Prise en main de Python](documents/01-introduction/01-prise-en-main.ipynb) Rappels NumPy et pandas.
+- [Planning du semestre](documents/01-introduction/planning.pdf)
+:::
+
+## Chap. 2 — Régression
+
+::: documents
+- [Énoncé du TP 1](documents/02-regression/tp1-enonce.pdf) Régression linéaire sur des données de consommation électrique.
+- [Notebook du TP 1](documents/02-regression/tp1-regression.ipynb) À compléter pendant la séance.
+- [Fonctions utilitaires](documents/02-regression/utils.py) Chargement et affichage des données, à placer à côté du notebook.
+- [Corrigé du TP 1](documents/02-regression/tp1-solution.py){.solution}
+- [Examen blanc](documents/02-regression/examen-blanc.pdf){.hidden} Masqué : ni affiché ni publié.
+:::
+
+## Chap. 3 — Classification
+
+::: documents
+- [Notebook — k plus proches voisins](documents/03-classification/knn.ipynb) Démonstration vue en cours.
+- [Script — k-means](documents/03-classification/kmeans.py) Implémentation minimale, sans scikit-learn.
+- [Documentation scikit-learn](https://scikit-learn.org/stable/supervised_learning.html) Guide de l'apprentissage supervisé.
+- [Corrigé du TP 2](documents/03-classification/tp2-solution.ipynb){.solution} Publié après le rendu du TP.
+:::
+
+<!--
+Section entière masquée (titre, texte et documents) : l'entourer d'un bloc
+« content-hidden ». Rien n'est écrit dans la page ni publié ; retirer les deux
+lignes « ::: » pour l'afficher.
+-->
+
+::: content-hidden
+## Chap. 4 — Réseaux de neurones
+
+::: documents
+- [Slides — Réseaux de neurones](documents/02-regression/examen-blanc.pdf)
+:::
+:::

@@ -1,0 +1,22 @@
+title: Thème HE-Arc Ingénierie pour sites web de cours
+author: Fabrizio Albertetti
+version: 1.0.0
+quarto-required: ">=1.4.0"
+contributes:
+  formats:
+    # theme-hearc-websites-html : page web aux couleurs HE-Arc, avec listes
+    # de documents (::: documents ... :::)
+    html:
+      theme:
+        - cosmo
+        - hearc-web.scss
+      filters:
+        - documents.lua
+      lang: fr
+      toc: true
+      toc-title: "Sections"
+      toc-depth: 2
+      # les sections « ## » sont au 2e niveau : les déplier
+      toc-expand: true
+      highlight-style: github
+      anchor-sections: true

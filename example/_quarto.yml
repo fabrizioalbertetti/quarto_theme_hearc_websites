@@ -1,0 +1,35 @@
+project:
+  type: website
+  output-dir: _site
+  # Seules les pages .qmd sont rendues : les notebooks et scripts de
+  # documents/ sont publiés tels quels, à télécharger. Seuls les fichiers
+  # liés depuis une page sont publiés (un document masqué ne l'est donc pas).
+  render:
+    - "*.qmd"
+
+# ---------------------------------------------------------------------------
+# Paramètres du cours (sous-titre de la page : « name · class · year », sans
+# name s'il est déjà le titre de la page)
+# ---------------------------------------------------------------------------
+course:
+  name: "Intelligence Artificielle"
+  class: "IA I (ISC3-il) · MOIA (ISC3-id)"
+  year: "Année 2026-2027"
+
+author: "Fabrizio Albertetti"
+
+website:
+  title: "Intelligence Artificielle"
+  favicon: _extensions/fabrizioalbertetti/theme-hearc-websites/logo-he-arc-ing.jpg
+  navbar:
+    logo: _extensions/fabrizioalbertetti/theme-hearc-websites/logo-he-arc-ing.jpg
+    logo-alt: "HE-Arc Ingénierie"
+    left:
+      - href: index.qmd
+        text: Documents
+  page-footer:
+    left: "HE-Arc Ingénierie · Intelligence Artificielle · ISC3 · 2026-2027"
+    right: "Fabrizio Albertetti"
+
+format:
+  theme-hearc-websites-html: default

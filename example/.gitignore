@@ -1,0 +1,11 @@
+# Fichiers générés, à ne pas committer dans le dépôt d'un cours
+# (le dossier _extensions/ doit au contraire être committé)
+
+# Site rendu par `quarto render` et `quarto preview`
+/_site/
+
+# Cache et index de Quarto, dont l'état de `quarto preview`
+/.quarto/
+
+# Notebooks intermédiaires (pages .qmd qui exécutent du code Python)
+**/*.quarto_ipynb

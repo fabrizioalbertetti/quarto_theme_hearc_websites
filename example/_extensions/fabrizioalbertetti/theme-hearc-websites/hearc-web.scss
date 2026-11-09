@@ -1,0 +1,266 @@
+/*-- scss:defaults --*/
+
+// Thème web HE-Arc, aligné sur le logo HE-Arc Ingénierie :
+// rouge pur (#FF0000), noir, fond blanc, formes rondes.
+$hearc-red: #FF0000;
+$hearc-red-dark: #C80000;
+$hearc-black: #000000;
+$hearc-gray: #6E6E6E;
+$hearc-light: #F2F2F2;
+
+$primary: $hearc-red;
+$body-bg: #FFFFFF;
+$body-color: #1A1A1A;
+$link-color: $hearc-red-dark;
+$link-hover-color: $hearc-red;
+
+$font-family-sans-serif: "Helvetica Neue", Helvetica, Arial, sans-serif;
+$headings-font-weight: 700;
+$headings-color: $hearc-black;
+
+$navbar-bg: #FFFFFF;
+$navbar-fg: $hearc-black;
+$navbar-hl: $hearc-red;
+
+$footer-bg: $hearc-light;
+$footer-fg: $hearc-gray;
+
+$code-block-bg: $hearc-light;
+$border-radius: 0.4rem;
+
+/*-- scss:rules --*/
+
+// Petite barre rouge, reprise du thème des slides
+@mixin hearc-bar($width) {
+  content: "";
+  display: block;
+  width: $width;
+  height: 5px;
+  margin-bottom: 0.35em;
+  background: $hearc-red;
+}
+
+// Barre de navigation : filet rouge en haut, logo
+.navbar {
+  border-top: 5px solid $hearc-red;
+  border-bottom: 1px solid $hearc-light;
+  .navbar-brand img {
+    max-height: 38px;
+  }
+  .navbar-title {
+    font-weight: 700;
+  }
+}
+
+// En-tête de la page
+#title-block-header {
+  .title {
+    font-weight: 700;
+    &::before {
+      @include hearc-bar(2.2rem);
+    }
+  }
+  .subtitle {
+    color: $hearc-red;
+  }
+}
+
+// Titres de section
+main h2 {
+  margin-top: 2.2rem;
+  border-bottom: none;
+  &::before {
+    @include hearc-bar(1.6rem);
+  }
+}
+
+// Listes ordinaires : puces rondes rouges
+main ul:not(.hearc-docs) {
+  list-style: none;
+  padding-left: 1.4em;
+  > li {
+    position: relative;
+    &::before {
+      content: "";
+      position: absolute;
+      left: -1em;
+      top: 0.55em;
+      width: 0.42em;
+      height: 0.42em;
+      border-radius: 50%;
+      background: $hearc-red;
+    }
+  }
+}
+
+main ol > li::marker {
+  color: $hearc-red;
+  font-weight: 700;
+}
+
+// Informations du cours : liste de définitions sur deux colonnes
+//   Terme
+//   : définition
+main dl {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.35rem 1.2rem;
+  margin: 1rem 0;
+  dt {
+    font-weight: 700;
+    &::after {
+      content: " :";
+    }
+  }
+  dd {
+    margin: 0;
+  }
+  @media (max-width: 576px) {
+    grid-template-columns: 1fr;
+    gap: 0 0;
+    dd {
+      margin-bottom: 0.6rem;
+    }
+  }
+}
+
+// Carte d'information (::: hearc-card), par ex. modalités d'évaluation
+.hearc-card {
+  height: 100%;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid #E3E3E3;
+  border-top: 4px solid $hearc-red;
+  border-radius: $border-radius;
+  background: #FFFFFF;
+  > :first-child {
+    margin-top: 0;
+  }
+  > :last-child {
+    margin-bottom: 0;
+  }
+  .hearc-card-title {
+    font-weight: 700;
+  }
+  p:has(> .hearc-card-title:only-child) {
+    margin-bottom: 0.4rem;
+  }
+}
+
+// Table des matières : section active en rouge
+#TOC .nav-link.active,
+#TOC a.active {
+  color: $hearc-red;
+  border-left-color: $hearc-red;
+}
+
+// ---------------------------------------------------------------------------
+// Listes de documents (::: documents, voir documents.lua)
+// ---------------------------------------------------------------------------
+.hearc-docs {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr));
+  gap: 0.75rem;
+}
+
+.hearc-doc {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  height: 100%;
+  padding: 0.85rem 1rem;
+  border: 1px solid #E3E3E3;
+  border-left: 5px solid $hearc-gray;
+  border-radius: $border-radius;
+  background: #FFFFFF;
+  color: $body-color;
+  text-decoration: none;
+  transition: box-shadow 0.15s, border-color 0.15s, transform 0.15s;
+
+  &:is(a):hover,
+  &:is(a):focus-visible {
+    color: $body-color;
+    border-color: $hearc-red;
+    box-shadow: 0 0.3rem 0.9rem rgba(0, 0, 0, 0.08);
+    transform: translateY(-1px);
+    .hearc-doc-title {
+      color: $hearc-red;
+    }
+    .hearc-doc-action {
+      color: $hearc-red;
+    }
+  }
+}
+
+.hearc-doc-icon {
+  font-size: 1.7rem;
+  line-height: 1;
+  color: $hearc-gray;
+}
+
+.hearc-doc-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.hearc-doc-title {
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.hearc-doc-desc {
+  font-size: 0.9rem;
+  color: #444;
+  p, ul {
+    margin: 0;
+  }
+}
+
+.hearc-doc-meta {
+  font-size: 0.78rem;
+  color: $hearc-gray;
+}
+
+.hearc-doc-action {
+  font-size: 1.1rem;
+  color: #B0B0B0;
+  align-self: center;
+}
+
+// Couleur par type de fichier (filet gauche et icône)
+@mixin hearc-doc-kind($color) {
+  border-left-color: $color;
+  .hearc-doc-icon {
+    color: $color;
+  }
+}
+.hearc-doc-pdf   { @include hearc-doc-kind($hearc-red); }
+.hearc-doc-ipynb { @include hearc-doc-kind(#E37400); }
+.hearc-doc-py    { @include hearc-doc-kind(#306998); }
+.hearc-doc-url   { @include hearc-doc-kind($hearc-black); }
+
+// Corrigé : badge
+.hearc-doc.solution .hearc-doc-title::after {
+  content: "corrigé";
+  margin-left: 0.5em;
+  padding: 0.05em 0.45em;
+  border-radius: 1em;
+  font-size: 0.7rem;
+  font-weight: 700;
+  vertical-align: 0.15em;
+  color: #FFFFFF;
+  background: $hearc-black;
+}
+
+// Document annoncé mais pas encore publié
+.hearc-doc-missing {
+  opacity: 0.55;
+  border-style: dashed;
+  border-left-style: solid;
+  background: $hearc-light;
+}
