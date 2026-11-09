@@ -85,7 +85,11 @@ local function file_size(target)
   if quarto and quarto.doc and quarto.doc.input_file then
     dir = pandoc.path.directory(quarto.doc.input_file)
   end
-  local path = pandoc.path.join({ dir, (target:gsub("[?#].*$", "")) })
+  -- pandoc encode les espaces des liens (« 2.1%20Minimax ») : décoder
+  local rel = target:gsub("[?#].*$", ""):gsub("%%(%x%x)", function(h)
+    return string.char(tonumber(h, 16))
+  end)
+  local path = pandoc.path.join({ dir, rel })
   local f = io.open(path, "rb")
   if not f then
     return nil
