@@ -6,14 +6,17 @@ title: "Intelligence Artificielle"
 
 <!--
 Structure : chaque titre « ## » est une section (listée dans la table des
-matières à droite). Dans une section, un bloc « ::: documents » transforme une
-liste de liens en cartes : icône selon le type (PDF, notebook, Python...),
-taille du fichier et description (texte après le lien).
+matières à droite). Dans une section, un bloc « ::: documents » transforme :
+- une liste de liens en cartes : icône selon le type (PDF, notebook, Python...),
+  taille du fichier et description (texte après le lien) ;
+- un tableau (une ligne par chapitre) : chaque lien devient un badge compact.
 
 - {.solution} après le lien ajoute le badge « corrigé » ;
 - {.hidden} masque la puce : ni affichée, ni publiée (voir la fin de la page
   pour masquer une section entière) ;
-- un fichier absent est affiché « bientôt disponible » (avertissement au rendu) ;
+- un fichier absent est masqué automatiquement (avertissement au rendu) : il
+  apparaît dès qu'il est déposé et le site regénéré ;
+- {.soon} affiche plutôt un fichier absent grisé, « bientôt disponible » ;
 - les .ipynb et .py sont téléchargés, les PDF et liens s'ouvrent dans un onglet.
 -->
 
@@ -49,12 +52,16 @@ Référence
 
 1 projet et des questionnaires (au maximum un par chapitre), en tout début de
 la leçon du chapitre suivant. Aucun matériel autorisé ; une absence vaut 1.
+Aucun matériel autorisé ; une absence vaut 1.
+  $$\text{Note} = \frac{7 \cdot \text{Projet} + 3 \cdot \text{Questionnaires}}{10}$$
 :::
 
 ::: {.g-col-12 .g-col-md-6 .hearc-card}
 [MOIA (ISC3-id)]{.hearc-card-title}
 
 1 projet et 1 examen oral.
+
+
 :::
 ::::
 
@@ -66,33 +73,50 @@ la leçon du chapitre suivant. Aucun matériel autorisé ; une absence vaut 1.
   autorisée dans une certaine limite pour le reste. Vous devez maîtriser votre
   code et référencer celui qui n'est pas le vôtre.
 
-## Chap. 1 — Introduction
+## Introduction
 
-Historique, familles de l'IA et organisation du cours.
+<!-- Liste de liens dans « ::: documents » : grille de cartes -->
 
 ::: documents
-- [Slides — Introduction](documents/01-introduction/01-introduction-slides.pdf) Définitions, grandes familles de l'IA, enjeux éthiques.
-- [Prise en main de Python](documents/01-introduction/01-prise-en-main.ipynb) Rappels NumPy et pandas.
-- [Planning du semestre](documents/01-introduction/planning.pdf)
+- [Slides — Introduction](documents/00-introduction/01-introduction-slides.pdf) Définitions, grandes familles de l'IA, enjeux éthiques.
+- [Prise en main de Python](documents/00-introduction/01-prise-en-main.ipynb) Rappels NumPy et pandas.
+- [Planning du semestre](documents/00-introduction/planning.pdf)
 :::
 
-## Chap. 2 — Régression
+## 1. Résolution de problèmes par recherche
+
+<!--
+Tableau dans « ::: documents » : une ligne par chapitre, chaque lien devient
+un badge (type et taille au survol). Plusieurs liens par cellule possibles.
+Ici, le corrigé du TP 3 n'est pas encore déposé : il est masqué
+automatiquement et apparaîtra dès que le fichier sera ajouté.
+-->
 
 ::: documents
-- [Énoncé du TP 1](documents/02-regression/tp1-enonce.pdf) Régression linéaire sur des données de consommation électrique.
-- [Notebook du TP 1](documents/02-regression/tp1-regression.ipynb) À compléter pendant la séance.
-- [Fonctions utilitaires](documents/02-regression/utils.py) Chargement et affichage des données, à placer à côté du notebook.
-- [Corrigé du TP 1](documents/02-regression/tp1-solution.py){.solution}
-- [Examen blanc](documents/02-regression/examen-blanc.pdf){.hidden} Masqué : ni affiché ni publié.
+| Chapitre                   | Cours                                                         | Exercices / TP                                     | Corrigé                                                      |
+|----------------------------|---------------------------------------------------------------|----------------------------------------------------|--------------------------------------------------------------|
+| 1.1 Recherche aveugle      | [PDF](documents/01-recherche/1.1-recherche-aveugle.pdf)       | [TP1 Taquin](documents/01-recherche/tp1-taquin.ipynb) | [solution](documents/01-recherche/tp1-taquin-solution.py) |
+| 1.2 Recherche heuristique  | [PDF](documents/01-recherche/1.2-recherche-heuristique.pdf)   | [TP2 A\*](documents/01-recherche/tp2-astar.ipynb)  | [solution](documents/01-recherche/tp2-astar-solution.py)     |
+| 1.3 Algorithmes génétiques | [PDF](documents/01-recherche/1.3-algorithmes-genetiques.pdf)  | [TP3 AG](documents/01-recherche/tp3-ag.ipynb)      | [solution](documents/01-recherche/tp3-ag-solution.py)        |
 :::
 
-## Chap. 3 — Classification
+## 2. Apprentissage automatique
+
+<!-- {.soon} : document annoncé, grisé « bientôt disponible » -->
 
 ::: documents
-- [Notebook — k plus proches voisins](documents/03-classification/knn.ipynb) Démonstration vue en cours.
-- [Script — k-means](documents/03-classification/kmeans.py) Implémentation minimale, sans scikit-learn.
+| Chapitre           | Cours                                                       | Exercices / TP                                                                                                                                               | Corrigé                                                                   |
+|--------------------|-------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------|
+| 2.1 Régression     | [PDF](documents/02-apprentissage/2.1-regression.pdf)        | [TP4 énoncé](documents/02-apprentissage/tp4-enonce.pdf) [notebook](documents/02-apprentissage/tp4-regression.ipynb) [utils.py](documents/02-apprentissage/utils.py) | [solution](documents/02-apprentissage/tp4-solution.py)                    |
+| 2.2 Classification | [PDF](documents/02-apprentissage/2.2-classification.pdf){.soon} | [TP5 k-NN](documents/02-apprentissage/tp5-knn.ipynb)                                                                                                     | [solution](documents/02-apprentissage/tp5-solution.ipynb){.soon}          |
+:::
+
+## Ressources
+
+::: documents
+- [Script — k-means](documents/02-apprentissage/kmeans.py) Implémentation minimale, sans scikit-learn.
 - [Documentation scikit-learn](https://scikit-learn.org/stable/supervised_learning.html) Guide de l'apprentissage supervisé.
-- [Corrigé du TP 2](documents/03-classification/tp2-solution.ipynb){.solution} Publié après le rendu du TP.
+- [Examen blanc](documents/02-apprentissage/examen-blanc.pdf){.hidden} Masqué : ni affiché ni publié.
 :::
 
 <!--
@@ -102,9 +126,11 @@ lignes « ::: » pour l'afficher.
 -->
 
 ::: content-hidden
-## Chap. 4 — Réseaux de neurones
+## 3. Réseaux de neurones
 
 ::: documents
-- [Slides — Réseaux de neurones](documents/02-regression/examen-blanc.pdf)
+| Chapitre      | Cours                                        |
+|---------------|----------------------------------------------|
+| 3.1 Perceptron | [PDF](documents/03-reseaux/3.1-perceptron.pdf) |
 :::
 :::

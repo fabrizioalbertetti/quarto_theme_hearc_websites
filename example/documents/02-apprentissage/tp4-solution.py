@@ -1,4 +1,4 @@
-"""Corrigé du TP 1 : régression linéaire par moindres carrés."""
+"""Corrigé du TP 4 : régression linéaire par moindres carrés."""
 import numpy as np
 from utils import charger_donnees, tracer
 

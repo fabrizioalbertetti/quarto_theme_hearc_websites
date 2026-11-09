@@ -67,16 +67,17 @@ quarto update extension fabrizioalbertetti/quarto_theme_hearc_websites
 2. Placer les documents dans `documents/` (un sous-dossier par section, par exemple).
 
 3. Dans `index.qmd`, une section par titre `##`, et dans chaque section un bloc
-   `::: documents` avec une liste de liens :
+   `::: documents` contenant un **tableau** (une ligne par chapitre) ou une **liste**
+   de liens (cartes), voir [Listes de documents](#listes-de-documents) :
 
    ```markdown
-   ## Chap. 2 — Régression
+   ## 1. Résolution de problèmes par recherche
 
    ::: documents
-   - [Énoncé du TP 1](documents/02-regression/tp1-enonce.pdf) Description facultative.
-   - [Notebook du TP 1](documents/02-regression/tp1-regression.ipynb)
-   - [Corrigé du TP 1](documents/02-regression/tp1-solution.py){.solution}
-   - [Documentation scikit-learn](https://scikit-learn.org)
+   | Chapitre                   | Cours                    | Exercices / TP              | Corrigé                        |
+   |----------------------------|--------------------------|-----------------------------|--------------------------------|
+   | 1.1 Recherche aveugle      | [PDF](documents/1.1.pdf) | [TP1 Taquin](documents/tp1.ipynb) | [solution](documents/tp1-sol.py) |
+   | 1.2 Recherche heuristique  | [PDF](documents/1.2.pdf) | [TP2 A\*](documents/tp2.ipynb)    | [solution](documents/tp2-sol.py) |
    :::
    ```
 
@@ -99,7 +100,18 @@ Avant les sections de documents, `index.qmd` peut présenter le cours (voir l'ex
 
 ## Listes de documents
 
-Chaque puce d'un bloc `::: documents` devient une carte cliquable :
+Un bloc `::: documents` peut contenir :
+
+- **un tableau** : une ligne par chapitre, une colonne par sorte de document (colonnes
+  libres). Chaque lien devient un badge compact (icône du type ; type et taille au
+  survol) ; plusieurs liens par cellule sont possibles
+  (`[énoncé](tp4.pdf) [notebook](tp4.ipynb) [utils.py](utils.py)`). Les colonnes sont
+  alignées d'un tableau à l'autre (chapitre : 30 %) ; sur mobile, chaque ligne est
+  empilée (chapitre, puis badges). Une cellule vide reste vide ;
+- **une liste à puces** de liens : chaque puce devient une carte cliquable avec
+  description (texte après le lien), taille et type.
+
+Les deux formes suivent les mêmes règles :
 
 | Fichier            | Icône / libellé | Au clic                    |
 |--------------------|-----------------|----------------------------|
@@ -110,11 +122,21 @@ Chaque puce d'un bloc `::: documents` devient une carte cliquable :
 | `https://…`        | Lien            | ouvert dans un nouvel onglet |
 | autre              | Fichier         | ouvert par le navigateur   |
 
-- Le texte après le lien (séparateur `—`, `:` ou `-` facultatif) est la description.
-- La taille du fichier est affichée automatiquement.
-- `{.solution}` après le lien ajoute un badge « corrigé ».
-- Un fichier absent est affiché grisé, « bientôt disponible », sans lien, et un
-  avertissement est affiché au rendu : on peut annoncer un document avant de le publier.
+- Cartes : le texte après le lien (séparateur `—`, `:` ou `-` facultatif) est la
+  description ; `{.solution}` après le lien ajoute un badge « corrigé ».
+- La taille du fichier est calculée automatiquement.
+- Un fichier local absent est **masqué automatiquement** (et listé dans un avertissement
+  au rendu) : on peut lister à l'avance tous les documents du semestre, chacun apparaît
+  dès que son fichier est déposé dans `documents/` et le site regénéré. Les liens
+  externes (`https://…`) ne sont pas vérifiés.
+- Pour annoncer un document absent plutôt que le masquer : `{.soon}` après le lien
+  l'affiche grisé, « bientôt disponible », sans lien. Pour tous les documents du site
+  ou d'une page (`_quarto.yml` ou en-tête du `.qmd`) :
+
+  ```yaml
+  documents:
+    missing: soon    # défaut : hide
+  ```
 
 ## Masquer un document ou une section
 

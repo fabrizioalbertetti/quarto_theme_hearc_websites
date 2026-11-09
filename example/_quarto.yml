@@ -31,5 +31,10 @@ website:
     left: "HE-Arc Ingénierie · Intelligence Artificielle · ISC3 · 2026-2027"
     right: "Fabrizio Albertetti"
 
+# Document dont le fichier est absent de documents/ : masqué (hide, défaut) ou
+# affiché grisé « bientôt disponible » (soon). {.soon} sur un lien : ce document seul.
+documents:
+  missing: hide
+
 format:
   theme-hearc-websites-html: default

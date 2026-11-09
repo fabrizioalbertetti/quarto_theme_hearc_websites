@@ -244,6 +244,111 @@ main dl {
 .hearc-doc-py    { @include hearc-doc-kind(#306998); }
 .hearc-doc-url   { @include hearc-doc-kind($hearc-black); }
 
+// ---------------------------------------------------------------------------
+// Tableau de documents : une ligne par chapitre, badges (.hearc-chip)
+// ---------------------------------------------------------------------------
+.hearc-documents {
+  max-width: 100%;
+}
+
+.hearc-documents table.hearc-docs-table {
+  width: 100%;
+  margin: 1rem 0 1.5rem;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+
+  thead th {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: $hearc-gray;
+    border-bottom: 2px solid $hearc-black;
+    background: transparent;
+  }
+  tbody td {
+    padding: 0.55rem 0.75rem;
+    vertical-align: middle;
+    border-bottom: 1px solid #E3E3E3;
+  }
+  tbody tr:hover td {
+    background: #FAFAFA;
+  }
+  // Colonnes alignées d'un tableau à l'autre : chapitre 30 %, autres
+  // colonnes à parts égales
+  table-layout: fixed;
+  thead th:first-child {
+    width: 30%;
+  }
+  tbody td:first-child {
+    font-weight: 600;
+  }
+
+  // Petit écran : une ligne = le chapitre, puis ses badges les uns à la suite
+  @media (max-width: 576px) {
+    thead {
+      display: none;
+    }
+    tbody tr {
+      display: block;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid #E3E3E3;
+    }
+    tbody td {
+      display: inline;
+      padding: 0;
+      border: none;
+    }
+    tbody td:first-child {
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+    tbody tr:hover td {
+      background: transparent;
+    }
+  }
+}
+
+.hearc-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  margin: 0.1rem 0.3rem 0.1rem 0;
+  padding: 0.15rem 0.6rem 0.15rem 0.45rem;
+  border: 1px solid #DADADA;
+  border-radius: 1rem;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  white-space: nowrap;
+  color: $body-color;
+  background: #FFFFFF;
+  text-decoration: none;
+  transition: border-color 0.15s, color 0.15s;
+
+  .bi {
+    color: $hearc-gray;
+  }
+  &:is(a):hover,
+  &:is(a):focus-visible {
+    color: $hearc-red;
+    border-color: $hearc-red;
+  }
+  &.hearc-doc-pdf .bi   { color: $hearc-red; }
+  &.hearc-doc-ipynb .bi { color: #E37400; }
+  &.hearc-doc-py .bi    { color: #306998; }
+  &.hearc-doc-url .bi   { color: $hearc-black; }
+
+  &.hearc-doc-missing {
+    color: #A0A0A0;
+    border-style: dashed;
+    background: $hearc-light;
+    .bi {
+      color: #B8B8B8;
+    }
+  }
+}
+
 // Corrigé : badge
 .hearc-doc.solution .hearc-doc-title::after {
   content: "corrigé";

@@ -1,4 +1,4 @@
-"""Fonctions utilitaires du TP 1 (régression linéaire)."""
+"""Fonctions utilitaires du TP 4 (régression linéaire)."""
 import numpy as np
 import matplotlib.pyplot as plt
 

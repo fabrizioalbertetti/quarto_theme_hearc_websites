@@ -1,22 +1,38 @@
 -- Listes de documents d'un cours.
 --
--- Un bloc « ::: documents » contenant une liste à puces de liens :
+-- Dans un bloc « ::: documents » :
 --
---   ::: documents
---   - [Slides du cours](documents/01/slides.pdf) Description facultative
---   - [Notebook du TP](documents/01/tp.ipynb)
---   - [Corrigé](documents/01/solution.py){.solution}
---   - [Corrigé du TP 2](documents/01/tp2.ipynb){.hidden}
---   :::
+-- 1. une liste à puces de liens devient une grille de cartes cliquables
+--    (icône et libellé selon le type de fichier, taille, description) :
 --
--- {.hidden} masque la puce : ni carte ni lien dans la page, et le fichier
--- n'est pas publié (Quarto ne copie dans _site/ que les fichiers liés).
+--      ::: documents
+--      - [Slides du cours](documents/01/slides.pdf) Description facultative
+--      - [Notebook du TP](documents/01/tp.ipynb)
+--      - [Corrigé](documents/01/solution.py){.solution}
+--      :::
 --
--- devient une liste de cartes cliquables : icône et libellé selon le type de
--- fichier (PDF, notebook, Python...), taille du fichier, description.
--- Un fichier absent est affiché « bientôt disponible » (sans lien) et signalé
--- par un avertissement au rendu : on peut donc annoncer un document avant
--- de le publier.
+-- 2. dans un tableau (une ligne par chapitre, une colonne par sorte de
+--    document), chaque lien devient un badge compact (icône + texte ;
+--    type et taille au survol) ; plusieurs liens par cellule possibles :
+--
+--      ::: documents
+--      | Chapitre              | Cours           | Exercices / TP             | Corrigé                |
+--      |-----------------------|-----------------|----------------------------|------------------------|
+--      | 1.1 Recherche aveugle | [PDF](c11.pdf)  | [TP1 Taquin](tp1.ipynb)    | [solution](tp1-sol.py) |
+--      :::
+--
+-- {.hidden} sur un lien le masque : ni carte ni lien dans la page, et le
+-- fichier n'est pas publié (Quarto ne copie dans _site/ que les fichiers liés).
+-- Un fichier local absent est masqué automatiquement : il suffit de déposer
+-- le fichier et de relancer le rendu pour qu'il apparaisse. Option dans
+-- _quarto.yml (ou l'en-tête d'une page) :
+--
+--   documents:
+--     missing: hide    # (défaut) document absent masqué
+--     missing: soon    # affiché grisé « bientôt disponible », sans lien
+--
+-- {.soon} sur un lien force « bientôt disponible » pour ce document seul.
+-- Les liens externes (https://...) ne sont pas vérifiés.
 --
 -- Transmet aussi `course` (_quarto.yml) au sous-titre de la page si celui-ci
 -- n'est pas donné : « Nom du cours · Classe · Année ».
@@ -35,6 +51,12 @@ local TYPES = {
 
 -- Fichiers proposés au téléchargement (les autres s'ouvrent dans le navigateur)
 local DOWNLOAD = { ipynb = true, py = true, zip = true, csv = true }
+
+-- Document dont le fichier est absent : "hide" (masqué) ou "soon"
+-- (« bientôt disponible ») ; lu dans `documents.missing` par Meta
+local missing_mode = "hide"
+-- Fichiers absents masqués, signalés en une ligne à la fin du rendu
+local hidden_missing = {}
 
 local function html_escape(s)
   return (s:gsub("&", "&amp;"):gsub("<", "&lt;"):gsub(">", "&gt;"):gsub('"', "&quot;"))
@@ -92,7 +114,58 @@ local function trim_description(inlines)
   return inlines
 end
 
--- Une puce de la liste -> carte HTML (nil si la puce ne commence pas par un lien)
+-- Analyse d'un lien vers un document. Renvoie nil si le document est masqué :
+-- lien marqué {.hidden}, ou fichier local absent (option documents.missing:
+-- hide, sauf {.soon}). Rien n'est alors écrit dans la page, et le fichier
+-- n'est pas publié dans _site/ (Quarto ne copie que les fichiers liés).
+local function resolve(link)
+  if link.classes:includes("hidden") then
+    return nil
+  end
+  local target = link.target
+  local kind = file_type(target)
+  local doc = { target = target, kind = kind, info = TYPES[kind], missing = false }
+  if kind ~= "url" then
+    doc.size = file_size(target)
+    if not doc.size then
+      if missing_mode == "hide" and not link.classes:includes("soon") then
+        table.insert(hidden_missing, target)
+        return nil
+      end
+      doc.missing = true
+      quarto.log.warning("documents : fichier introuvable « " .. target .. " » (affiché comme bientôt disponible)")
+    end
+  end
+
+  doc.classes = { "hearc-doc-" .. kind }
+  for _, c in ipairs(link.classes) do
+    table.insert(doc.classes, c)
+  end
+  if doc.missing then
+    table.insert(doc.classes, "hearc-doc-missing")
+  end
+
+  -- Balise et attributs : lien, ou simple texte si le fichier est absent
+  doc.tag, doc.attrs = "a", ' href="' .. html_escape(target) .. '"'
+  if doc.missing then
+    doc.tag, doc.attrs = "span", ""
+  elseif kind == "url" or kind == "pdf" or kind == "html" then
+    doc.attrs = doc.attrs .. ' target="_blank" rel="noopener"'
+  elseif DOWNLOAD[kind] then
+    doc.attrs = doc.attrs .. " download"
+  end
+
+  -- « PDF · 237 ko » ou « bientôt disponible »
+  if doc.missing then
+    doc.meta = "bientôt disponible"
+  else
+    doc.meta = doc.info.label .. (doc.size and (" · " .. doc.size) or "")
+  end
+  return doc
+end
+
+-- Une puce de la liste -> carte HTML ("" si masquée, nil si la puce ne
+-- commence pas par un lien)
 local function document_card(item)
   if #item == 0 or (item[1].t ~= "Plain" and item[1].t ~= "Para") then
     return nil
@@ -104,72 +177,67 @@ local function document_card(item)
   end
   inlines:remove(1)
 
-  local target = link.target
-  local kind = file_type(target)
-  local info = TYPES[kind]
+  local doc = resolve(link)
+  if not doc then
+    return ""
+  end
+
   local description = inlines_to_html(trim_description(inlines))
   -- blocs suivants de la puce (paragraphes, sous-listes) : ajoutés à la description
   for i = 2, #item do
     description = description .. pandoc.write(pandoc.Pandoc({ item[i] }), "html")
   end
 
-  local meta = { info.label }
-  local missing = false
-  if kind ~= "url" then
-    local size = file_size(target)
-    if size then
-      table.insert(meta, size)
-    else
-      missing = true
-      quarto.log.warning("documents : fichier introuvable « " .. target .. " » (affiché comme bientôt disponible)")
-    end
-  end
-
-  local classes = { "hearc-doc", "hearc-doc-" .. kind }
-  for _, c in ipairs(link.classes) do
-    table.insert(classes, c)
-  end
-  if missing then
-    table.insert(classes, "hearc-doc-missing")
-  end
-
-  local tag, attrs = "a", ' href="' .. html_escape(target) .. '"'
-  if missing then
-    tag, attrs = "div", ""
-    meta = { "bientôt disponible" }
-  elseif kind == "url" or kind == "pdf" or kind == "html" then
-    attrs = attrs .. ' target="_blank" rel="noopener"'
-  elseif DOWNLOAD[kind] then
-    attrs = attrs .. ' download'
-  end
-
   local action = ""
-  if not missing then
-    local action_icon = DOWNLOAD[kind] and "bi-download" or "bi-box-arrow-up-right"
+  if not doc.missing then
+    local action_icon = DOWNLOAD[doc.kind] and "bi-download" or "bi-box-arrow-up-right"
     action = '<i class="bi ' .. action_icon .. ' hearc-doc-action" aria-hidden="true"></i>'
   end
 
+  local tag = doc.missing and "div" or doc.tag
   return table.concat({
-    "<li><", tag, ' class="', table.concat(classes, " "), '"', attrs, ">",
-    '<i class="bi ', info.icon, ' hearc-doc-icon" aria-hidden="true"></i>',
+    "<li><", tag, ' class="hearc-doc ', table.concat(doc.classes, " "), '"', doc.attrs, ">",
+    '<i class="bi ', doc.info.icon, ' hearc-doc-icon" aria-hidden="true"></i>',
     '<span class="hearc-doc-body">',
     '<span class="hearc-doc-title">', inlines_to_html(link.content), "</span>",
     description ~= "" and ('<span class="hearc-doc-desc">' .. description .. "</span>") or "",
-    '<span class="hearc-doc-meta">', table.concat(meta, " · "), "</span>",
+    '<span class="hearc-doc-meta">', doc.meta, "</span>",
     "</span>", action,
     "</", tag, "></li>",
   })
 end
 
--- Puce masquée : lien marqué {.hidden}. Ni la carte ni le lien ne sont
--- écrits dans la page, et le fichier n'est donc pas publié dans _site/
-local function is_hidden(item)
-  local first = item[1]
-  if not first or (first.t ~= "Plain" and first.t ~= "Para") then
-    return false
+-- Un lien dans une cellule de tableau -> badge compact (icône + texte),
+-- détails (type, taille) au survol. Lien masqué : rien.
+local function document_chip(link)
+  local doc = resolve(link)
+  if not doc then
+    return pandoc.Inlines({})
   end
-  local link = first.content[1]
-  return link ~= nil and link.t == "Link" and link.classes:includes("hidden")
+  return pandoc.RawInline("html", table.concat({
+    "<", doc.tag, ' class="hearc-chip ', table.concat(doc.classes, " "), '"', doc.attrs,
+    ' title="', html_escape(doc.meta), '">',
+    '<i class="bi ', doc.info.icon, '" aria-hidden="true"></i>',
+    inlines_to_html(link.content),
+    "</", doc.tag, ">",
+  }))
+end
+
+-- Tableau : chaque lien devient un badge ; plusieurs liens d'une même cellule
+-- sont placés côte à côte
+local function documents_table(tbl)
+  return tbl:walk({
+    Link = document_chip,
+    -- espaces restés seuls entre badges masqués ou en fin de cellule
+    Plain = function(plain)
+      local content = plain.content
+      while #content > 0 and (content[#content].t == "Space" or content[#content].t == "SoftBreak") do
+        content:remove(#content)
+      end
+      plain.content = content
+      return plain
+    end,
+  })
 end
 
 local function Div(div)
@@ -181,12 +249,7 @@ local function Div(div)
     if block.t == "BulletList" then
       local cards = {}
       for _, item in ipairs(block.content) do
-        local card = nil
-        if is_hidden(item) then
-          card = ""
-        else
-          card = document_card(item)
-        end
+        local card = document_card(item)
         if card then
           table.insert(cards, card)
         else
@@ -195,6 +258,14 @@ local function Div(div)
       end
       result:insert(pandoc.RawBlock("html",
         '<ul class="hearc-docs">' .. table.concat(cards) .. "</ul>"))
+    elseif block.t == "Table" then
+      block.classes:insert("hearc-docs-table")
+      -- largeurs calculées par le navigateur, et non d'après la longueur des
+      -- lignes du tableau source (longues à cause des chemins des fichiers)
+      for i, colspec in ipairs(block.colspecs) do
+        block.colspecs[i] = { colspec[1], nil }
+      end
+      result:insert(documents_table(block))
     else
       result:insert(block)
     end
@@ -204,9 +275,28 @@ local function Div(div)
   return div
 end
 
--- Sous-titre par défaut : « Nom du cours · Classe · Année »
+
+-- Une seule ligne pour tous les documents masqués faute de fichier
+local function Pandoc(doc)
+  if #hidden_missing > 0 then
+    quarto.log.warning("documents : masqués car fichier absent (" .. #hidden_missing .. ") : "
+      .. table.concat(hidden_missing, ", "))
+  end
+end
+
+-- Option documents.missing ; sous-titre par défaut : « Nom du cours · Classe · Année »
 -- (sans le nom du cours s'il est déjà le titre de la page)
 local function Meta(meta)
+  local options = meta.documents
+  if type(options) == "table" and options.missing then
+    local mode = pandoc.utils.stringify(options.missing)
+    if mode == "hide" or mode == "soon" then
+      missing_mode = mode
+    else
+      quarto.log.warning("documents.missing : « " .. mode .. " » inconnu (hide ou soon)")
+    end
+  end
+
   local course = meta.course
   if meta.subtitle or type(course) ~= "table" then
     return nil
@@ -230,4 +320,5 @@ end
 return {
   { Meta = Meta },
   { Div = Div },
+  { Pandoc = Pandoc },
 }
