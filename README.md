@@ -54,6 +54,7 @@ quarto update extension fabrizioalbertetti/quarto_theme_hearc_websites
 
    website:
      title: "Intelligence Artificielle"
+     favicon: _extensions/fabrizioalbertetti/theme-hearc-websites/favicon.svg
      navbar:
        logo: _extensions/fabrizioalbertetti/theme-hearc-websites/logo-he-arc-ing.jpg
 
@@ -166,6 +167,7 @@ _extensions/theme-hearc-websites/   l'extension Quarto (installée par `quarto a
   hearc-web.scss                    thème (couleurs, titres, cartes des documents)
   documents.lua                     blocs `::: documents` ; sous-titre depuis `course`
   logo-he-arc-ing.jpg               logo de la barre de navigation
+  favicon.svg                       icône de l'onglet (« arc » rouge du logo)
 example/                            site d'exemple qui utilise l'extension
   _quarto.yml                       configuration du site et du cours
   index.qmd                         page des documents, commentée

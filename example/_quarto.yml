@@ -20,7 +20,7 @@ author: "Fabrizio Albertetti"
 
 website:
   title: "Intelligence Artificielle"
-  favicon: _extensions/fabrizioalbertetti/theme-hearc-websites/logo-he-arc-ing.jpg
+  favicon: _extensions/fabrizioalbertetti/theme-hearc-websites/favicon.svg
   navbar:
     logo: _extensions/fabrizioalbertetti/theme-hearc-websites/logo-he-arc-ing.jpg
     logo-alt: "HE-Arc Ingénierie"
